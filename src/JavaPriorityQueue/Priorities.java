@@ -1,25 +1,50 @@
 package JavaPriorityQueue;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Priorities {
-    List<Student> studentList = new ArrayList<Student>();
+    public List<Student> studentList = new ArrayList<Student>();
 
     int id = 0;
- public List<Student> getStudents(List<String> events){
 
-//this is done just to check github
-     //againagagain  333
- }
- public void addStudent(String name, double cgpa){
-     Student student = new Student(id, name, cgpa);
-     studentList.add(student);
-     id++;
- }
- public void removeStudent(){
-    Student selectedStudent = studentList.stream().max((a,b)-> (int)a.getCGPA() > (int)b.getCGPA()? (int)a.getCGPA():(int)b.getCGPA()).get();
-     System.out.println(studentList.get(selectedStudent.getId()));
-    studentList.remove(selectedStudent.getId());
- }
+    public String getStudents(List<String> events) {
+
+        List<String> separatedInput;
+        for (String event : events) {
+            separatedInput = Arrays.asList(event.split(" "));
+            if (separatedInput.get(0).equals("ENTER")) {
+                addStudent(separatedInput.get(1), Double.parseDouble(separatedInput.get(2)), Integer.parseInt(separatedInput.get(3)));
+
+            } else if (separatedInput.get(0).equals("SERVED")) {
+                removeStudent();
+
+            }
+        }
+        return studentList.stream().sorted((Comparator.comparing(Student::getCGPA).reversed())).map(Student::getName).collect(Collectors.joining("\n"));
+    }
+
+    public void addStudent(String name, double cgpa, int id) {
+        Student student = new Student(name, cgpa, id);
+        studentList.add(student);
+    }
+
+    public void removeStudent() {
+        if (studentList.isEmpty()) {
+
+        } else {
+
+            double maxCGPA = studentList.stream()
+                    .mapToDouble(o -> o.getCGPA()).max().getAsDouble();
+
+            for (Student student : studentList) {
+                if (student.getCGPA() == maxCGPA) {
+                    studentList.remove(student);
+                    break;
+                }
+            }
+
+
+        }
+    }
 }
