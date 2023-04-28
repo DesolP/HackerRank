@@ -21,7 +21,14 @@ public class Priorities {
 
             }
         }
-        return studentList.stream().sorted((Comparator.comparing(Student::getCGPA).reversed())).map(Student::getName).collect(Collectors.joining("\n"));
+        if(studentList.isEmpty()){
+           return "EMPTY";
+        }else{
+            return studentList.stream().sorted((Comparator.comparing(Student::getCGPA)
+                    .reversed()).thenComparing(Comparator.comparing(Student::getName)))
+                    .map(Student::getName).collect(Collectors.joining("\n"));
+
+        }
     }
 
     public void addStudent(String name, double cgpa, int id) {
@@ -36,6 +43,9 @@ public class Priorities {
 
             double maxCGPA = studentList.stream()
                     .mapToDouble(o -> o.getCGPA()).max().getAsDouble();
+
+            String name = studentList.stream()
+                    .max(Comparator.comparing(Student::getCGPA)).map(o -> o.getName()).toString();
 
             for (Student student : studentList) {
                 if (student.getCGPA() == maxCGPA) {
